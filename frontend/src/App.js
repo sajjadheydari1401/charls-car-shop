@@ -59,8 +59,12 @@ function App() {
   };
 
   useEffect(() => {
+    let invoiceObject = {
+      userId: "621af6cd00304b272c134721",
+      carId: "621bbbefa4d2548ee4bd88a4"
+    }
     axios
-      .get("http://localhost:5000/api/cars/621bbbefa4d2548ee4bd88a4=")
+      .post("http://localhost:5000/api/invoice", invoiceObject)
       .then((res) => console.log(res))
       .catch((err) => console.log(err));
   }, []);

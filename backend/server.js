@@ -8,6 +8,7 @@ import generateToken from "./utils/generateToken.js";
 import multer from "multer";
 import bodyParser from "body-parser";
 import cors from "cors";
+import Invoice from "./models/invoiceModel.js";
 
 colors.enable();
 
@@ -181,6 +182,29 @@ app.get("/api/cars/:id", async (req, res) => {
     }
   } catch (err) {
     res.status(404).send("Car not found!");
+  }
+});
+
+// ##################### Invoice Api #######################
+
+// @desc    Create new invoice
+// @route   POST /api/invoice
+// @access  Private
+app.post("/api/invoice", async (req, res) => {
+  const { userId, carId } = req.body;
+  let invoiceObj = {};
+  try {
+    const user = await User.findById(userId);
+    const car = await Car.findById(carId);
+    invoiceObj["user"] = user;
+    invoiceObj["invoiceItem"] = [car];
+    console.log("invoiceObj", invoiceObj);
+
+    const invoice = new Invoice(invoiceObj);
+    const createdInvoice = await invoice.save();
+    res.status(200).json(createdInvoice);
+  } catch (err) {
+    res.status(404).send("Failed to create invoice!");
   }
 });
 
