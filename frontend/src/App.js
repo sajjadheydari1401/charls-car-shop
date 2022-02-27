@@ -5,7 +5,6 @@ function App() {
   const [carName, setCarName] = useState("");
   const [carModel, setCarModel] = useState("");
   const [carPrice, setCarPrice] = useState(0);
-  const [userId] = useState("621af6cd00304b272c134721");
   const [selectedImage, setSelectedImage] = useState("");
 
   const uploadFileHandler = async (e) => {
@@ -40,7 +39,6 @@ function App() {
     data.append("model", carModel);
     data.append("SKU", uniqid());
     data.append("price", carPrice);
-    data.append("userId", userId);
 
     axios({
       method: "post",
@@ -52,6 +50,10 @@ function App() {
     })
       .then(function (response) {
         console.log(response);
+        setCarName("");
+        setCarModel("");
+        setCarPrice("");
+        setSelectedImage("");
       })
       .catch(function (error) {
         console.log(error);
@@ -59,14 +61,10 @@ function App() {
   };
 
   useEffect(() => {
-    let invoiceObject = {
-      userId: "621af6cd00304b272c134721",
-      carId: "621bbbefa4d2548ee4bd88a4"
-    }
-    axios
-      .post("http://localhost:5000/api/invoice", invoiceObject)
-      .then((res) => console.log(res))
-      .catch((err) => console.log(err));
+    // axios
+    //   .get("http://localhost:5000/api/invoices/user/621bd61a7ae811fdc563ce51")
+    //   .then((res) => console.log(res))
+    //   .catch((err) => console.log(err));
   }, []);
 
   return (
@@ -96,14 +94,7 @@ function App() {
           placeholder="price"
           required
         />
-        <input
-          type="text"
-          defaultValue={userId}
-          name="userId"
-          placeholder="userId"
-          required
-        />
-
+        
         <input type="file" onChange={uploadFileHandler} name="image" required />
         <button type="submit">Submit</button>
       </form>

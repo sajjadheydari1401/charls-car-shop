@@ -33,7 +33,7 @@ app.use(express.json());
 // @desc    Register a new user
 // @route   POST /api/users
 // @access  Public
-app.post("/api/user", async (req, res) => {
+app.post("/api/register", async (req, res) => {
   const { name, email, password } = req.body;
 
   const userExists = await User.findOne({ email });
@@ -136,18 +136,14 @@ const upload = multer({
 // @route   POST /api/car
 // @access  Private/Admin
 app.post("/api/car", upload.single("image"), async (req, res) => {
-  const { name, model, SKU, price, userId } = req.body;
-  // const path = req.file.path.replace(/\\/g, "/");
+  const { name, model, SKU, price } = req.body;
   try {
-    const userObj = await User.findById({ _id: userId });
-
     const car = new Car({
       name: name,
       model: model,
       SKU: SKU,
       price: price,
       image: req.file.filename,
-      user: userObj,
     });
 
     const createdCar = await car.save();
@@ -198,7 +194,6 @@ app.post("/api/invoice", async (req, res) => {
     const car = await Car.findById(carId);
     invoiceObj["user"] = user;
     invoiceObj["invoiceItem"] = [car];
-    console.log("invoiceObj", invoiceObj);
 
     const invoice = new Invoice(invoiceObj);
     const createdInvoice = await invoice.save();
@@ -207,6 +202,39 @@ app.post("/api/invoice", async (req, res) => {
     res.status(404).send("Failed to create invoice!");
   }
 });
+
+// @desc    Get invoices of the logged in user by id
+// @route   GET /api/invoices/user/:id
+// @access  Public
+app.get("/api/invoices/user/:id", async (req, res) => {
+  try {
+    Invoice.distinct("_id", { user: {_id: req.params.id} }, function (err, movies) {
+      if (movies) {
+        res.status(200).json(movies);
+      } 
+      if(err) {
+        res.status(400).send("User has no invoices!");
+      }
+    });
+  } catch (err) {
+    res.status(500).send("Failed to get user invoices!");
+  }
+});
+
+// @desc    Get all invoices
+// @route   GET /api/allInvoices
+// @access  Private/Admin
+app.get("/api/allInvoices", async (req, res) => {
+  try {
+    const allInvoices = await Invoice.find({});
+    res.status(200).json(allInvoices);
+  } catch (err) {
+    res.status(404).send("No invoices found!");
+  }
+});
+
+
+
 
 if (process.env.NODE_ENV === "development") {
   app.get("/", (req, res) => {
