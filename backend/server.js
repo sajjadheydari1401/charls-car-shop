@@ -98,10 +98,13 @@ app.get("/api/users", async (req, res) => {
 // @route   GET /api/users/:id
 // @access  Private/Admin
 app.get("/api/users/:id", async (req, res) => {
-  const id = req.params.id;
   try {
-    const user = await User.findById({ _id: id });
-    res.status(200).json(user);
+    const user = await User.findById(req.params.id);
+    if (user) {
+      res.status(200).json(user);
+    } else {
+      res.status(404).send("User not found!");
+    }
   } catch (err) {
     res.status(404).send("User not found!");
   }
@@ -131,7 +134,6 @@ const upload = multer({
 // @desc    Create a car
 // @route   POST /api/car
 // @access  Private/Admin
-
 app.post("/api/car", upload.single("image"), async (req, res) => {
   const { name, model, SKU, price, userId } = req.body;
   // const path = req.file.path.replace(/\\/g, "/");
@@ -151,6 +153,34 @@ app.post("/api/car", upload.single("image"), async (req, res) => {
     res.status(200).json(createdCar);
   } catch (err) {
     res.status(400).send("Could not add new car!");
+  }
+});
+
+// @desc    Get all cars
+// @route   GET /api/cars
+// @access  Public
+app.get("/api/cars", async (req, res) => {
+  try {
+    const cars = await Car.find({});
+    res.status(200).json(cars);
+  } catch (err) {
+    res.status(404).send("Not found cars!");
+  }
+});
+
+// @desc    Get single car by Id
+// @route   GET /api/cars/:id
+// @access  Public
+app.get("/api/cars/:id", async (req, res) => {
+  try {
+    const car = await Car.findById(req.params.id);
+    if (car) {
+      res.status(200).json(car);
+    } else {
+      res.status(404).send("Car not found!");
+    }
+  } catch (err) {
+    res.status(404).send("Car not found!");
   }
 });
 

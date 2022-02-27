@@ -4,8 +4,8 @@ import axios from "axios";
 function App() {
   const [carName, setCarName] = useState("");
   const [carModel, setCarModel] = useState("");
-  const [carPrice, setCarPrice ] = useState(0);
-  const [userId ] = useState("621af6cd00304b272c134721");
+  const [carPrice, setCarPrice] = useState(0);
+  const [userId] = useState("621af6cd00304b272c134721");
   const [selectedImage, setSelectedImage] = useState("");
 
   const uploadFileHandler = async (e) => {
@@ -58,15 +58,49 @@ function App() {
       });
   };
 
+  useEffect(() => {
+    axios
+      .get("http://localhost:5000/api/cars/621bbbefa4d2548ee4bd88a4=")
+      .then((res) => console.log(res))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <div>
       <form onSubmit={submitForm} encType="multipart/form-data">
-        <input type="text" onChange={(e) => setCarName(e.target.value)} value={carName} name="name" placeholder="name" required/>
-        <input type="text" onChange={(e) => setCarModel(e.target.value)} value={carModel} name="model" placeholder="model" required/>
-        <input type="number" onChange={(e) => setCarPrice(e.target.value)} value={carPrice} name="price" placeholder="price" required/>
-        <input type="text" defaultValue={userId} name="userId" placeholder="userId" required/>
-    
-        <input type="file" onChange={uploadFileHandler} name="image" required/>
+        <input
+          type="text"
+          onChange={(e) => setCarName(e.target.value)}
+          value={carName}
+          name="name"
+          placeholder="name"
+          required
+        />
+        <input
+          type="text"
+          onChange={(e) => setCarModel(e.target.value)}
+          value={carModel}
+          name="model"
+          placeholder="model"
+          required
+        />
+        <input
+          type="number"
+          onChange={(e) => setCarPrice(e.target.value)}
+          value={carPrice}
+          name="price"
+          placeholder="price"
+          required
+        />
+        <input
+          type="text"
+          defaultValue={userId}
+          name="userId"
+          placeholder="userId"
+          required
+        />
+
+        <input type="file" onChange={uploadFileHandler} name="image" required />
         <button type="submit">Submit</button>
       </form>
     </div>
