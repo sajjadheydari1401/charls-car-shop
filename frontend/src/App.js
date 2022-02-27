@@ -1,18 +1,9 @@
 import { useEffect } from "react";
 import axios from "axios";
 function App() {
-  const config = {
-    headers: {
-      "Content-Type": "Application/json",
-      Accept: "Application/json",
-    },
-  };
   useEffect(() => {
     axios
-      .post(`http://localhost:5000/api/login`, {
-        email: "sajjad@gmail.com",
-        password: "123123",
-      })
+      .get(`http://localhost:5000/api/users/621af6cd00304b272c134721`)
       .then(function (response) {
         console.log(response);
       })

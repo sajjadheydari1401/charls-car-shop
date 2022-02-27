@@ -54,7 +54,7 @@ app.post("/api/login", async (req, res) => {
 
   const user = await User.findOne({ email });
 
-  if (user.password === password) {
+  if (user && user.password === password) {
     res.json({
       _id: user._id,
       name: user.name,
@@ -64,6 +64,31 @@ app.post("/api/login", async (req, res) => {
     });
   } else {
     res.status(401).send("Unauthorized");
+  }
+});
+
+// @desc    Get all users
+// @route   GET /api/users
+// @access  Private/Admin
+app.get("/api/users", async (req, res) => {
+  try {
+    const users = await User.find({});
+    res.status(200).json(users);
+  } catch (err) {
+    res.status(500).send("Internal server error");
+  }
+});
+
+// @desc    Get user by ID
+// @route   GET /api/users/:id
+// @access  Private/Admin
+app.get("/api/users/:id", async (req, res) => {
+  const id = req.params.id;
+  try {
+    const user = await User.findById({_id: id });
+    res.status(200).json(user);
+  } catch (err) {
+    res.status(404).send("User not found!");
   }
 });
 
