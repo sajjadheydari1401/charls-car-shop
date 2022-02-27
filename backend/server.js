@@ -3,16 +3,31 @@ import dotenv from "dotenv";
 import colors from "colors";
 import connectDB from "./config/db.js";
 import User from "./models/userModel.js";
+import Car from "./models/carModel.js";
 import generateToken from "./utils/generateToken.js";
+import multer from "multer";
+import bodyParser from "body-parser";
+import cors from "cors";
 
 colors.enable();
 
 dotenv.config();
 
+const app = express();
+
+app.use(express.static("./frontend/public"));
+app.use("./frontend/public", express.static("./frontend/public"));
+
+app.use(bodyParser.json({ limit: "30mb", extended: true }));
+app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
+
+app.use(cors());
+
 await connectDB();
 
-const app = express();
 app.use(express.json());
+
+// ##################### User Api #######################
 
 // @desc    Register a new user
 // @route   POST /api/users
@@ -85,10 +100,57 @@ app.get("/api/users", async (req, res) => {
 app.get("/api/users/:id", async (req, res) => {
   const id = req.params.id;
   try {
-    const user = await User.findById({_id: id });
+    const user = await User.findById({ _id: id });
     res.status(200).json(user);
   } catch (err) {
     res.status(404).send("User not found!");
+  }
+});
+
+// ##################### Car Api #######################
+
+const storage = multer.diskStorage({
+  // destination for files
+  destination(req, file, callBack) {
+    callBack(null, "./backend/uploads/images");
+  },
+
+  // add the extention
+  filename(req, file, callBack) {
+    callBack(null, Date.now() + file.originalname);
+  },
+});
+
+const upload = multer({
+  storage: storage,
+  limits: {
+    fieldSize: 1024 * 1024 * 3,
+  },
+});
+
+// @desc    Create a car
+// @route   POST /api/car
+// @access  Private/Admin
+
+app.post("/api/car", upload.single("image"), async (req, res) => {
+  const { name, model, SKU, price, userId } = req.body;
+  // const path = req.file.path.replace(/\\/g, "/");
+  try {
+    const userObj = await User.findById({ _id: userId });
+
+    const car = new Car({
+      name: name,
+      model: model,
+      SKU: SKU,
+      price: price,
+      image: req.file.filename,
+      user: userObj,
+    });
+
+    const createdCar = await car.save();
+    res.status(200).json(createdCar);
+  } catch (err) {
+    res.status(400).send("Could not add new car!");
   }
 });
 
