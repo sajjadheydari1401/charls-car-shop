@@ -75,7 +75,7 @@ const RegisterPage = () => {
   };
   return (
     <Wrapper>
-      <RegisterForm onSubmit={submitForm} encType="multipart/form-data">
+      <RegisterForm onSubmit={submitForm}>
         <Input
           type="text"
           onChange={(e) => setName(e.target.value)}
