@@ -47,16 +47,29 @@ const Logo = styled.span`
 
 const NavBarComponent = () => {
   const user = useSelector((state) => state.userSlice?.user);
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
   return (
     <Navbar>
       <NavList>
         <NavItemsBox>
-          {user && (
+          {user && user.isAdmin && (
             <NavItem>
-              <Link to="/login" onClick={() => dispatch(logout())}>Log Out</Link>
+              <Link to="/admin">Admin Panel</Link>
             </NavItem>
           )}
+          {user && (
+            <React.Fragment>
+              <NavItem>
+                <Link to="/">Dashboard</Link>
+              </NavItem>
+              <NavItem>
+                <Link to="/login" onClick={() => dispatch(logout())}>
+                  Log Out
+                </Link>
+              </NavItem>
+            </React.Fragment>
+          )}
+
           {!user && (
             <React.Fragment>
               <NavItem>
