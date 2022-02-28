@@ -15,7 +15,7 @@ const Container = styled.div`
   height: calc(100% - 70px);
   flex-grow: 1;
   padding: 0 60px;
-  background-color: blue;
+  background-color: #e9ecef;
 `;
 
 const App = () => {
