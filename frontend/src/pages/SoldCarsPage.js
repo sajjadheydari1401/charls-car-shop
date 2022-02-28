@@ -21,7 +21,9 @@ const Wrapper = styled.div`
 const TotalSum = styled.p`
   position: absolute;
   top: 50px;
-  left: 50%;
+  left: 42.5%;
+  font-weight: bold;
+  font-size: 20px;
 `;
 
 const SoldCarsPage = () => {
@@ -54,7 +56,7 @@ const SoldCarsPage = () => {
           totalSum += invoice?.invoicePrice;
           return <CardComponent user={user} invoice={invoice} key={index} />;
         })}
-      <TotalSum>total: {totalSum}</TotalSum>
+      <TotalSum>Total Sum: {totalSum}</TotalSum>
     </Wrapper>
   );
 };

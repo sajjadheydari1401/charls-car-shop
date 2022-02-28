@@ -191,7 +191,7 @@ app.post("/api/invoice", async (req, res) => {
   let invoiceObj = {};
   try {
     const user = await User.findById(userId);
-    const car = await Car.findByIdAndUpdate(carId, { sold: true }, {new: true});
+    const car = await Car.findByIdAndUpdate(carId, { sold: true, ownerId: userId}, {new: true});
 
     invoiceObj["invoicePrice"] = car.price;
     invoiceObj["user"] = user;

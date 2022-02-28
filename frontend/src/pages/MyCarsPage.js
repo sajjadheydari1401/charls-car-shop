@@ -1,8 +1,11 @@
-import React from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
+import axios from "axios";
 
-import { useSelector } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { BASE_URL } from "../constants/constants";
 import CardComponent from "../components/CardComponent";
+import { setCars } from "../redux/slices/carSlice";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -19,16 +22,31 @@ const MyCarsPage = () => {
   const user = useSelector((state) => state.userSlice?.user);
   const cars = useSelector((state) => state.carSlice?.cars);
 
+  const dispatch = useDispatch();
+
+  const fetchAllCars = () => {
+    axios
+      .get(`${BASE_URL}/api/cars`)
+      .then(function (response) {
+        dispatch(setCars(response.data));
+      })
+      .catch(function (error) {
+        console.log(error);
+      });
+  };
+
+  useEffect(() => {
+    fetchAllCars();
+  }, []);
+
   return (
     <Wrapper>
-      {/* {cars &&
-        cars.filter((car) => car.sold === true).map((c, index) => {
-          return (
-            <CardComponent car={c} user={user} key={index} />
-          );
-        })
-      } */}
-      <h1>My Cars Page</h1>
+      {cars &&
+        cars
+          .filter((car) => car.sold === true && car.ownerId === user._id)
+          .map((c, index) => {
+            return <CardComponent car={c} user={user} key={index} />;
+          })}
     </Wrapper>
   );
 };

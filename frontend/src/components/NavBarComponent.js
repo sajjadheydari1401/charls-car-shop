@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 import { logout } from "../redux/slices/userSlice";
+import { clearCars } from "../redux/slices/carSlice";
+import { clearInvoices } from "../redux/slices/invoiceSlice";
 
 const Navbar = styled.div`
   width: 100%;
@@ -45,6 +47,11 @@ const Logo = styled.span`
   color: #292828;
 `;
 
+const Username = styled.span`
+  color: gray;
+  margin-left: 20px;
+`;
+
 const NavBarComponent = () => {
   const user = useSelector((state) => state.userSlice?.user);
   const dispatch = useDispatch();
@@ -52,17 +59,17 @@ const NavBarComponent = () => {
     <Navbar>
       <NavList>
         <NavItemsBox>
-          {user && user.isAdmin && (
-            <NavItem>
-              <Link to="/admin">Add New Car</Link>
-            </NavItem>
-          )}
           {user && (
             <React.Fragment>
               {user.isAdmin && (
-                <NavItem>
-                  <Link to="/soldcars">Sold Cars</Link>
-                </NavItem>
+                <React.Fragment>
+                  <NavItem>
+                    <Link to="/admin">Add New Car</Link>
+                  </NavItem>
+                  <NavItem>
+                    <Link to="/soldcars">Sales Records</Link>
+                  </NavItem>
+                </React.Fragment>
               )}
               {!user.isAdmin && (
                 <NavItem>
@@ -73,10 +80,19 @@ const NavBarComponent = () => {
                 <Link to="/">For Sale</Link>
               </NavItem>
               <NavItem>
-                <Link to="/login" onClick={() => dispatch(logout())}>
+                <Link
+                  to="/login"
+                  onClick={() => {
+                    dispatch(clearCars());
+                    dispatch(clearInvoices());
+                    dispatch(logout());
+                    localStorage.removeItem("persist:root");
+                  }}
+                >
                   Log Out
                 </Link>
               </NavItem>
+              <Username>Hi {user.name}!</Username>
             </React.Fragment>
           )}
 

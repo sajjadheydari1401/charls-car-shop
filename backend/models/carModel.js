@@ -27,6 +27,11 @@ const carSchema = mongoose.Schema(
       required: true,
       default: false,
     },
+    ownerId: {
+      type: String,
+      required: false,
+      default: "",
+    },
   },
   {
     timestamps: true,

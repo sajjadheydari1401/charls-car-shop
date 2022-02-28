@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import styled from "styled-components";
 import axios from "axios";
 
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../constants/constants";
-import { setCars } from "../redux/slices/carSlice";
+import { buyCar, setCars } from "../redux/slices/carSlice";
 import CardComponent from "../components/CardComponent";
+import { useNavigate } from "react-router-dom";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -23,12 +24,13 @@ const DashboardPage = () => {
   const cars = useSelector((state) => state.carSlice?.cars);
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const fetchAllCars = () => {
     axios
       .get(`${BASE_URL}/api/cars`)
       .then(function (response) {
-        dispatch(setCars(response.data));
+        dispatch(setCars(response.data))
       })
       .catch(function (error) {
         console.log(error);
@@ -45,6 +47,9 @@ const DashboardPage = () => {
       .post(`${BASE_URL}/api/invoice`, invoiceObject)
       .then((res) => {
         console.log(res);
+        dispatch(buyCar(carId))
+        navigate("/mycars");
+
       })
       .catch((err) => console.log(err));
   };

@@ -108,8 +108,8 @@ const CardComponent = ({car, user, invoice, buyHandler}: CardProps) => {
          </React.Fragment>
         )}
       </CardContent>
-      {(user && !user.isAdmin && car ) && (
-        <Button onClick={(e) => buyHandler?.(e, car._id)}>
+      {(user && !user.isAdmin && car && !car?.sold) && (
+        <Button onClick={(e) => buyHandler?.(e, car?._id)}>
           Buy
         </Button>
       )}
