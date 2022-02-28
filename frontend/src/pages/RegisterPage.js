@@ -4,6 +4,8 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
 import { BASE_URL } from "../constants/constants";
+import { useDispatch } from "react-redux";
+import { login } from "../redux/slices/userSlice";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -53,6 +55,7 @@ const RegisterPage = () => {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -66,7 +69,7 @@ const RegisterPage = () => {
         password,
       })
       .then(function (response) {
-        console.log(response);
+        dispatch(login(response.data));
         navigate("/login");
       })
       .catch(function (error) {

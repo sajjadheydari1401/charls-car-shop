@@ -20,7 +20,7 @@ const routes = (user) => [
   },
   {
     path: "/admin",
-    element: user ? <AdminPanelPage /> : <Navigate to="/login" />,
+    element: (user && user.isAdmin) ? <AdminPanelPage /> : <Navigate to="/login" />,
   },
   {
     path: "/notfound",

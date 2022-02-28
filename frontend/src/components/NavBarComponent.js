@@ -1,6 +1,8 @@
 import React from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+import { logout } from "../redux/slices/userSlice";
 
 const Navbar = styled.div`
   width: 100%;
@@ -44,14 +46,15 @@ const Logo = styled.span`
 `;
 
 const NavBarComponent = () => {
-  const user = false;
+  const user = useSelector((state) => state.userSlice?.user);
+  const dispatch = useDispatch()
   return (
     <Navbar>
       <NavList>
         <NavItemsBox>
           {user && (
             <NavItem>
-              <Link to="/login">Log Out</Link>
+              <Link to="/login" onClick={() => dispatch(logout())}>Log Out</Link>
             </NavItem>
           )}
           {!user && (

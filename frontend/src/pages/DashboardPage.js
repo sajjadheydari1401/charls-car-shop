@@ -1,8 +1,11 @@
 import React from 'react'
+import { useSelector } from 'react-redux';
 
 const DashboardPage = () => {
+  const user = useSelector((state) => state.userSlice?.user);
+
   return (
-    <div>DashboardPage</div>
+    <div>Hello {user.name}</div>
   )
 }
 

@@ -2,6 +2,7 @@ import { BrowserRouter as Router, useRoutes } from "react-router-dom";
 import NavBarComponent from "./components/NavBarComponent";
 import styled from "styled-components";
 import routes from "./routes";
+import { useSelector } from "react-redux";
 
 const Main = styled.div`
   width: 100%;
@@ -19,7 +20,7 @@ const Container = styled.div`
 `;
 
 const App = () => {
-  const user = false;
+  const user = useSelector((state) => state.userSlice?.user);
   const routing = useRoutes(routes(user));
 
   return (
