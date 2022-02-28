@@ -22,6 +22,11 @@ const carSchema = mongoose.Schema(
       type: String,
       required: true,
     },
+    sold: {
+      type: Boolean,
+      required: true,
+      default: false,
+    },
   },
   {
     timestamps: true,

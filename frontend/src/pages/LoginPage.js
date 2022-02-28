@@ -54,7 +54,7 @@ const Button = styled.button`
 const LoginPage = () => {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const dispatch = useDispatch()
+  const dispatch = useDispatch();
 
   const navigate = useNavigate();
 
@@ -72,6 +72,7 @@ const LoginPage = () => {
       })
       .catch(function (error) {
         console.log(error);
+        alert('Failed to authenticate');
       });
   };
   return (

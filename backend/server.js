@@ -191,12 +191,15 @@ app.post("/api/invoice", async (req, res) => {
   let invoiceObj = {};
   try {
     const user = await User.findById(userId);
-    const car = await Car.findById(carId);
+    const car = await Car.findByIdAndUpdate(carId, { sold: true }, {new: true});
+
+    invoiceObj["invoicePrice"] = car.price;
     invoiceObj["user"] = user;
-    invoiceObj["invoiceItem"] = [car];
+    invoiceObj["invoiceItem"] = car;
 
     const invoice = new Invoice(invoiceObj);
     const createdInvoice = await invoice.save();
+
     res.status(200).json(createdInvoice);
   } catch (err) {
     res.status(404).send("Failed to create invoice!");
@@ -208,14 +211,18 @@ app.post("/api/invoice", async (req, res) => {
 // @access  Public
 app.get("/api/invoices/user/:id", async (req, res) => {
   try {
-    Invoice.distinct("_id", { user: {_id: req.params.id} }, function (err, movies) {
-      if (movies) {
-        res.status(200).json(movies);
-      } 
-      if(err) {
-        res.status(400).send("User has no invoices!");
+    Invoice.distinct(
+      "_id",
+      { user: { _id: req.params.id } },
+      function (err, movies) {
+        if (movies) {
+          res.status(200).json(movies);
+        }
+        if (err) {
+          res.status(400).send("User has no invoices!");
+        }
       }
-    });
+    );
   } catch (err) {
     res.status(500).send("Failed to get user invoices!");
   }
@@ -232,9 +239,6 @@ app.get("/api/allInvoices", async (req, res) => {
     res.status(404).send("No invoices found!");
   }
 });
-
-
-
 
 if (process.env.NODE_ENV === "development") {
   app.get("/", (req, res) => {

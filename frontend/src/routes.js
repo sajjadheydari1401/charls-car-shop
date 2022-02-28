@@ -4,6 +4,8 @@ import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
 import AdminPanelPage from "./pages/AdminPanelPage";
 import NotFoundPage from "./pages/NotFoundPage";
+import SoldCarsPage from "./pages/SoldCarsPage";
+import MyCarsPage from "./pages/MyCarsPage";
 
 const routes = (user) => [
   {
@@ -21,6 +23,14 @@ const routes = (user) => [
   {
     path: "/admin",
     element: (user && user.isAdmin) ? <AdminPanelPage /> : <Navigate to="/login" />,
+  },
+  {
+    path: "/soldcars",
+    element: (user && user.isAdmin) ? <SoldCarsPage /> : <Navigate to="/login" />,
+  },
+  {
+    path: "/mycars",
+    element: (user && !user.isAdmin) ? <MyCarsPage /> : <Navigate to="/login" />,
   },
   {
     path: "/notfound",

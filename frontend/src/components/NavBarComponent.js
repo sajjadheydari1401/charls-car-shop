@@ -54,13 +54,23 @@ const NavBarComponent = () => {
         <NavItemsBox>
           {user && user.isAdmin && (
             <NavItem>
-              <Link to="/admin">Admin Panel</Link>
+              <Link to="/admin">Add New Car</Link>
             </NavItem>
           )}
           {user && (
             <React.Fragment>
+              {user.isAdmin && (
+                <NavItem>
+                  <Link to="/soldcars">Sold Cars</Link>
+                </NavItem>
+              )}
+              {!user.isAdmin && (
+                <NavItem>
+                  <Link to="/mycars">My Cars</Link>
+                </NavItem>
+              )}
               <NavItem>
-                <Link to="/">Dashboard</Link>
+                <Link to="/">For Sale</Link>
               </NavItem>
               <NavItem>
                 <Link to="/login" onClick={() => dispatch(logout())}>

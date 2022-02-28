@@ -16,9 +16,10 @@ const Wrapper = styled.div`
   grid-column-gap: 20px;
   grid-row-gap: 30px;
   margin: 100px 0;
-`
+`;
 
 const DashboardPage = () => {
+  const user = useSelector((state) => state.userSlice?.user);
   const cars = useSelector((state) => state.carSlice?.cars);
 
   const dispatch = useDispatch();
@@ -36,7 +37,16 @@ const DashboardPage = () => {
 
   const buyHandler = (e, carId) => {
     e.preventDefault();
-    alert(carId);
+    let invoiceObject = {
+      userId: user._id,
+      carId: carId,
+    };
+    axios
+      .post(`${BASE_URL}/api/invoice`, invoiceObject)
+      .then((res) => {
+        console.log(res);
+      })
+      .catch((err) => console.log(err));
   };
 
   useEffect(() => {
@@ -46,11 +56,18 @@ const DashboardPage = () => {
   return (
     <Wrapper>
       {cars &&
-        cars.map((car, index) => {
-          return (
-            <CardComponent car={car} buyHandler={buyHandler} key={index} />
-          );
-        })}
+        cars
+          .filter((car) => car.sold === false)
+          .map((c, index) => {
+            return (
+              <CardComponent
+                car={c}
+                buyHandler={buyHandler}
+                user={user}
+                key={index}
+              />
+            );
+          })}
     </Wrapper>
   );
 };

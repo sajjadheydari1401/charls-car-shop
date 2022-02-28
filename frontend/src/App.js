@@ -17,6 +17,7 @@ const Container = styled.div`
   flex-grow: 1;
   padding: 0 60px;
   background-color: #e9ecef;
+  position: relative;
 `;
 
 const App = () => {
