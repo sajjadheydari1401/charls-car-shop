@@ -5,14 +5,18 @@ import axios from "axios";
 import { useDispatch, useSelector } from "react-redux";
 import { BASE_URL } from "../constants/constants";
 import { setCars } from "../redux/slices/carSlice";
+import CardComponent from "../components/CardComponent";
 
 const Wrapper = styled.div`
   width: 100%;
-  height: calc(100vh - 70px);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-`;
+  height: 100%;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-template-rows: repeat(2, 1fr);
+  grid-column-gap: 20px;
+  grid-row-gap: 30px;
+  margin: 100px 0;
+`
 
 const DashboardPage = () => {
   const cars = useSelector((state) => state.carSlice?.cars);
@@ -30,6 +34,11 @@ const DashboardPage = () => {
       });
   };
 
+  const buyHandler = (e, carId) => {
+    e.preventDefault();
+    alert(carId);
+  };
+
   useEffect(() => {
     fetchAllCars();
   }, []);
@@ -38,7 +47,9 @@ const DashboardPage = () => {
     <Wrapper>
       {cars &&
         cars.map((car, index) => {
-          return <div key={index}>{car.name}</div>;
+          return (
+            <CardComponent car={car} buyHandler={buyHandler} key={index} />
+          );
         })}
     </Wrapper>
   );
