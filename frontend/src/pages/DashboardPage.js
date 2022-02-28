@@ -15,7 +15,7 @@ const Wrapper = styled.div`
 `;
 
 const DashboardPage = () => {
-  const cars = useSelector((state) => state.carSlice?.cars[0]);
+  const cars = useSelector((state) => state.carSlice?.cars);
 
   const dispatch = useDispatch();
 
@@ -37,8 +37,8 @@ const DashboardPage = () => {
   return (
     <Wrapper>
       {cars &&
-        cars.map((car) => {
-          return <div key={car._id}>{car.name}</div>;
+        cars.map((car, index) => {
+          return <div key={index}>{car.name}</div>;
         })}
     </Wrapper>
   );

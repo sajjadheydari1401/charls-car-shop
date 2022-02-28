@@ -1,11 +1,12 @@
 import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 import axios from "axios";
 import uniqid from "uniqid";
 
 import { BASE_URL } from "../constants/constants";
 import { useDispatch } from "react-redux";
-import { setCars } from "../redux/slices/carSlice";
+import { addCar } from "../redux/slices/carSlice";
 
 const Wrapper = styled.div`
   width: 100%;
@@ -69,6 +70,7 @@ const AdminPanelPage = () => {
   const [selectedImage, setSelectedImage] = useState("");
 
   const dispatch = useDispatch();
+  const navigate = useNavigate();
 
   const uploadFileHandler = async (e) => {
     e.preventDefault();
@@ -83,8 +85,8 @@ const AdminPanelPage = () => {
       alert("Selected file must be an image");
       return;
     }
-    if (file.size > 100000) {
-      alert("Image file size must be less than 100kb");
+    if (file.size > 1000000) {
+      alert("Image file size must be less than 1000kb");
       return;
     }
 
@@ -110,11 +112,8 @@ const AdminPanelPage = () => {
     })
       .then(function (response) {
         console.log(response);
-        dispatch(setCars(response.data));
-        setCarName("");
-        setCarModel("");
-        setCarPrice("");
-        setSelectedImage("");
+        dispatch(addCar(response.data));
+        navigate("/");
       })
       .catch(function (error) {
         console.log(error);
