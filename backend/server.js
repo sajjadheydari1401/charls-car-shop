@@ -22,7 +22,19 @@ app.use("./frontend/public", express.static("./frontend/public"));
 app.use(bodyParser.json({ limit: "30mb", extended: true }));
 app.use(bodyParser.urlencoded({ limit: "30mb", extended: true }));
 
-app.use(cors());
+app.use(
+  cors(
+    {
+      origin: "*",
+    },
+    {
+      methods: ["GET", "POST", "DELETE", "UPDATE", "PUT", "PATCH"],
+    },
+    {
+      allowedHeaders: ["Content-Type", "Authorization"],
+    }
+  )
+);
 
 await connectDB();
 
@@ -191,7 +203,11 @@ app.post("/api/invoice", async (req, res) => {
   let invoiceObj = {};
   try {
     const user = await User.findById(userId);
-    const car = await Car.findByIdAndUpdate(carId, { sold: true, ownerId: userId}, {new: true});
+    const car = await Car.findByIdAndUpdate(
+      carId,
+      { sold: true, ownerId: userId },
+      { new: true }
+    );
 
     invoiceObj["invoicePrice"] = car.price;
     invoiceObj["user"] = user;
